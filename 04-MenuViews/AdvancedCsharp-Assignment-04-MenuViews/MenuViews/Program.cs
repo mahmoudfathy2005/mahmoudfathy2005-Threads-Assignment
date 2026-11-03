@@ -14,11 +14,11 @@ for (int t = 0; t < threads; t++)
             counter.RegisterView();
     });
     workers[t].Start();
-    workers[t].Join();
+    //workers[t].Join();
 }
 
-//foreach (Thread w in workers)
-//    w.Join();
+foreach (Thread w in workers)
+    w.Join();
 
 Console.WriteLine($"Expected: {expected}");
 Console.WriteLine($"Actual:   {counter.Views}");
