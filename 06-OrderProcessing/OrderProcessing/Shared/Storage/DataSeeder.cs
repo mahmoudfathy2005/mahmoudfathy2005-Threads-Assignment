@@ -6,11 +6,10 @@ namespace OrderProcessing.Shared.Storage;
 public static class DataSeeder
 {
     public static async Task ResetAsync(
-        CancellationToken ct = default)
+    CancellationToken ct = default)
     {
         ct.ThrowIfCancellationRequested();
 
-        // Delete the old Data folder
         if (Directory.Exists(DataFiles.DataDirectory))
         {
             Directory.Delete(
@@ -18,34 +17,38 @@ public static class DataSeeder
                 recursive: true);
         }
 
-        // Create a fresh Data folder
+        ct.ThrowIfCancellationRequested();
+
         Directory.CreateDirectory(DataFiles.DataDirectory);
 
-        // Create Phase 2 folders
+        ct.ThrowIfCancellationRequested();
+
         Directory.CreateDirectory(
-            Path.Combine(DataFiles.DataDirectory,
+            Path.Combine(
+                DataFiles.DataDirectory,
                 DataFiles.InvoicesFolder));
 
+        ct.ThrowIfCancellationRequested();
+
         Directory.CreateDirectory(
-            Path.Combine(DataFiles.DataDirectory,
+            Path.Combine(
+                DataFiles.DataDirectory,
                 DataFiles.ReportsFolder));
 
-        // Create the store
+        ct.ThrowIfCancellationRequested();
+
         var store = new JsonFileStore();
 
-        // Create seed data
         var customers = GetCustomers();
         var products = GetProducts();
         var coupons = GetCoupons();
         var incomingOrders = GetIncomingOrders();
 
-        // Write all files through JsonFileStore
         await SaveAsync(store, DataFiles.Customers, customers, ct);
         await SaveAsync(store, DataFiles.Products, products, ct);
         await SaveAsync(store, DataFiles.Coupons, coupons, ct);
         await SaveAsync(store, DataFiles.IncomingOrders, incomingOrders, ct);
 
-        // Empty files at the beginning
         await SaveAsync<Order>(
             store, DataFiles.Orders, new List<Order>(), ct);
 

@@ -1,10 +1,13 @@
-﻿namespace OrderProcessing
+﻿using OrderProcessing.Phase1.Runners;
+
+namespace OrderProcessing;
+
+public class Program
 {
-    internal class Program
+    public static async Task Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+        var phase1 = new Phase1Runner();
+
+        await phase1.RunAsync(CancellationToken.None);
     }
 }
